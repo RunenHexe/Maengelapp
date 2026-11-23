@@ -7,23 +7,23 @@
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- html2pdf.js CDN für die browserseitige PDF-Generierung -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <!-- html2canvas CDN für die Render-Erzeugung von PNG-Bildern -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-	<!-- PWA Meta Tags & Manifest -->
-	<link rel="manifest" href="manifest.json">
-	<meta name="theme-color" content="#2563eb">
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="apple-mobile-web-app-status-bar-style" content="default">
-	<meta name="apple-mobile-web-app-title" content="Mängelmelder">
-	<link rel="apple-touch-icon" href="icon-192.png">
+  <!-- PWA & Mobile Meta-Tags -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#1e293b" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Mängelmelder" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
 
   <style>
-    /* Verhindert unbeabsichtigtes Auszoomen bei Eingaben auf iOS */
+    /* Verhindert automatisches Hineinzoomen bei Eingaben auf iOS */
     input, textarea, select, button {
       font-size: 16px !important;
     }
-    /* Stylischer Custom-Scrollbar */
+    /* Dezent gestaltete Scrollbar */
     ::-webkit-scrollbar {
       width: 6px;
     }
@@ -35,7 +35,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans min-h-screen antialiased selection:bg-indigo-500 selection:text-white pb-12">
 
-  <!-- Haupt-Container (Zentriert für Tablets/Desktops, voll-breit auf Mobilgeräten) -->
+  <!-- Haupt-Container (Mobil-optimiert, zentriert auf Tablets/Desktops) -->
   <div class="max-w-lg mx-auto min-h-screen flex flex-col justify-between shadow-xl bg-white sm:my-4 sm:rounded-3xl sm:min-h-[calc(100vh-2rem)] overflow-hidden">
     
     <!-- HEADER -->
@@ -43,7 +43,7 @@
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
           <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
-            <!-- Wrench / Home SVG Icon -->
+            <!-- Icon -->
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V12m0 0V9a2 2 0 012-2h2a2 2 0 012 2v3m-6 0h6"/>
             </svg>
@@ -54,8 +54,8 @@
           </div>
         </div>
 
-        <!-- Zurücksetzen / Neues Ticket Button -->
-        <button id="resetBtn" title="Formular leeren" class="p-2.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition duration-150 active:scale-95">
+        <!-- Zurücksetzen / Formular leeren Button -->
+        <button id="resetBtn" title="Formular zurücksetzen" class="p-2.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition duration-150 active:scale-95">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
           </svg>
@@ -73,9 +73,9 @@
           <span id="refIdDisplay" class="font-mono font-semibold text-slate-700">Wird generiert...</span>
         </div>
         <div class="text-right">
-          <span class="text-slate-400 block text-[10px] uppercase font-semibold tracking-wider">Status</span>
-          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-indigo-50 text-indigo-700 border border-indigo-200">
-            Neuer Vorgang
+          <span class="text-slate-400 block text-[10px] uppercase font-semibold tracking-wider">Export-Format</span>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+            🖼️ PNG-Bild
           </span>
         </div>
       </div>
@@ -108,17 +108,15 @@
           <label for="incidentDateTime" class="block text-sm font-semibold text-slate-800 mb-1.5">
             Festgestellt am / um <span class="text-rose-500">*</span>
           </label>
-          <div class="relative">
-            <input 
-              type="datetime-local" 
-              id="incidentDateTime" 
-              required
-              class="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 text-slate-800"
-            />
-          </div>
+          <input 
+            type="datetime-local" 
+            id="incidentDateTime" 
+            required
+            class="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 text-slate-800"
+          />
         </div>
 
-        <!-- FELD: DRINGLICHKEIT (3 KACHELN) -->
+        <!-- FELD: DRINGLICHKEIT (3 AMPEL-BUTTONS) -->
         <div>
           <label class="block text-sm font-semibold text-slate-800 mb-2">
             Dringlichkeit <span class="text-rose-500">*</span>
@@ -164,7 +162,7 @@
             id="description" 
             rows="4" 
             required
-            placeholder="Beschreiben Sie das Problem möglichst genau (z. B. Ort im Haus, Ausmaß, bisherige Beobachtungen)..."
+            placeholder="Beschreiben Sie das Problem möglichst genau (z. B. Ort im Haus, Ausmaß, Aufzug/Heizung/Keller)..."
             class="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 text-slate-800 placeholder-slate-400"
           ></textarea>
         </div>
@@ -192,10 +190,10 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
             </svg>
-            <span class="text-sm font-medium">Foto aufnehmen oder auswählen</span>
+            <span class="text-sm font-medium">Foto aufnehmen oder aus Galeriefoto wählen</span>
           </button>
 
-          <!-- Foto Vorschau-Container (Standardmäßig ausgeblendet) -->
+          <!-- Foto Vorschau Container -->
           <div id="photoPreviewContainer" class="hidden mt-3 relative rounded-2xl overflow-hidden border border-slate-200 bg-slate-900 group">
             <img id="photoPreview" src="" alt="Vorschau" class="w-full h-48 object-cover" />
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent flex items-end justify-between p-3">
@@ -227,73 +225,74 @@
         <svg id="shareIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
         </svg>
-        <span id="btnText">Bericht teilen / als PDF speichern</span>
+        <span id="btnText">Bericht als Bild teilen / speichern</span>
       </button>
 
-      <!-- Sekundärer Link: Nur PDF Download -->
+      <!-- Sekundärer Button: Direkt-Download -->
       <button 
         type="button" 
         id="downloadOnlyBtn"
         class="w-full text-center py-2 text-xs font-semibold text-slate-500 hover:text-slate-800 transition">
-        Nur als PDF-Datei herunterladen
+        Nur als PNG-Datei herunterladen
       </button>
 
       <p class="text-[11px] text-center text-slate-400">
-        Die Daten verbleiben auf Ihrem Gerät und werden als PDF weitergegeben.
+        Lokale Bild-Erstellung ohne Server • Verhindert nachträgliche Änderungen
       </p>
     </footer>
 
   </div>
 
-  <!-- HIDDEN PDF TEMPLATE (Wird von html2pdf verarbeitet) -->
-  <div class="hidden">
-    <div id="pdfTemplate" class="p-8 bg-white text-slate-900 font-sans leading-normal max-w-[700px]">
+  <!-- OFF-SCREEN PNG TEMPLATE (Feste Breite 720px verhindert mobile Abschneide-Effekte) -->
+  <div style="position: absolute; left: -9999px; top: 0; width: 720px;" id="pngTemplateWrapper">
+    <div id="pngTemplate" style="background-color: #ffffff; color: #0f172a; padding: 36px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; box-sizing: border-box; width: 720px;">
       
-      <!-- PDF Header -->
-      <div style="border-bottom: 2px solid #1e293b; padding-bottom: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-start;">
+      <!-- Template Header -->
+      <div style="border-bottom: 3px solid #1e293b; padding-bottom: 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-start;">
         <div>
-          <span style="font-size: 10px; font-weight: 700; color: #4f46e5; text-transform: uppercase; letter-spacing: 1px;">Eigentümergemeinschaft</span>
-          <h1 style="font-size: 22px; font-weight: 800; color: #0f172a; margin: 2px 0 0 0;">Mängelmeldung (Stufe 1)</h1>
+          <span style="font-size: 11px; font-weight: 800; color: #4f46e5; text-transform: uppercase; letter-spacing: 1.2px;">Eigentümergemeinschaft</span>
+          <h1 style="font-size: 24px; font-weight: 800; color: #0f172a; margin: 4px 0 0 0; line-height: 1.2;">Mängelmeldung</h1>
         </div>
         <div style="text-align: right;">
-          <span style="font-size: 9px; color: #64748b; text-transform: uppercase; font-weight: 600; display: block;">Referenz-ID</span>
-          <span id="pdfRefId" style="font-family: monospace; font-size: 11px; font-weight: 700; color: #0f172a;">-</span>
+          <span style="font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 700; display: block;">Referenz-ID</span>
+          <span id="pngRefId" style="font-family: monospace; font-size: 12px; font-weight: 700; color: #0f172a;">-</span>
         </div>
       </div>
 
-      <!-- PDF Meta Table -->
-      <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px;">
+      <!-- Template Meta Table -->
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 14px;">
         <tr>
-          <td style="padding: 8px 12px; background-color: #f8fafc; border: 1px solid #e2e8f0; font-weight: 600; color: #475569; width: 30%;">Meldende Person:</td>
-          <td id="pdfReporter" style="padding: 8px 12px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">-</td>
+          <td style="padding: 10px 14px; background-color: #f8fafc; border: 1px solid #cbd5e1; font-weight: 700; color: #475569; width: 32%;">Meldende Person:</td>
+          <td id="pngReporter" style="padding: 10px 14px; border: 1px solid #cbd5e1; font-weight: 700; color: #0f172a;">-</td>
         </tr>
         <tr>
-          <td style="padding: 8px 12px; background-color: #f8fafc; border: 1px solid #e2e8f0; font-weight: 600; color: #475569;">Meldedatum & Uhrzeit:</td>
-          <td id="pdfDateTime" style="padding: 8px 12px; border: 1px solid #e2e8f0; font-weight: 600; color: #0f172a;">-</td>
+          <td style="padding: 10px 14px; background-color: #f8fafc; border: 1px solid #cbd5e1; font-weight: 700; color: #475569;">Meldedatum & Uhrzeit:</td>
+          <td id="pngDateTime" style="padding: 10px 14px; border: 1px solid #cbd5e1; font-weight: 600; color: #0f172a;">-</td>
         </tr>
         <tr>
-          <td style="padding: 8px 12px; background-color: #f8fafc; border: 1px solid #e2e8f0; font-weight: 600; color: #475569;">Dringlichkeit:</td>
-          <td id="pdfUrgency" style="padding: 8px 12px; border: 1px solid #e2e8f0; font-weight: 700;">-</td>
+          <td style="padding: 10px 14px; background-color: #f8fafc; border: 1px solid #cbd5e1; font-weight: 700; color: #475569;">Dringlichkeit:</td>
+          <td id="pngUrgency" style="padding: 10px 14px; border: 1px solid #cbd5e1; font-weight: 700;">-</td>
         </tr>
       </table>
 
-      <!-- PDF Description -->
-      <div style="margin-bottom: 20px;">
-        <h3 style="font-size: 13px; font-weight: 700; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px;">Problembeschreibung</h3>
-        <div id="pdfDescription" style="padding: 12px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 13px; color: #1e293b; white-space: pre-wrap; line-height: 1.5; min-height: 80px;">-</div>
+      <!-- Template Description -->
+      <div style="margin-bottom: 24px;">
+        <h3 style="font-size: 13px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.8px; margin: 0 0 8px 0; border-bottom: 1px solid #cbd5e1; padding-bottom: 6px;">Problembeschreibung</h3>
+        <div id="pngDescription" style="padding: 14px; background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; color: #1e293b; white-space: pre-wrap; line-height: 1.6; min-height: 90px;">-</div>
       </div>
 
-      <!-- PDF Photo Section -->
-      <div id="pdfPhotoSection" style="margin-bottom: 20px; display: none;">
-        <h3 style="font-size: 13px; font-weight: 700; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; border-bottom: 1px solid #cbd5e1; padding-bottom: 4px;">Fotodokumentation</h3>
-        <div style="text-align: center; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px; background-color: #f8fafc;">
-          <img id="pdfPhoto" src="" style="max-width: 100%; max-height: 380px; object-fit: contain; margin: 0 auto; border-radius: 4px;" />
+      <!-- Template Photo Section -->
+      <div id="pngPhotoSection" style="margin-bottom: 24px; display: none;">
+        <h3 style="font-size: 13px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.8px; margin: 0 0 8px 0; border-bottom: 1px solid #cbd5e1; padding-bottom: 6px;">Fotodokumentation</h3>
+        <div style="text-align: center; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; background-color: #f8fafc;">
+          <img id="pngPhoto" src="" style="max-width: 100%; max-height: 420px; object-fit: contain; margin: 0 auto; border-radius: 6px; display: block;" />
         </div>
       </div>
 
-      <!-- PDF Footer -->
-      <div style="margin-top: 30px; padding-top: 10px; border-top: 1px solid #e2e8f0; text-align: center; font-size: 10px; color: #94a3b8;">
-        Erzeugt über den Mängelmelder der Eigentümergemeinschaft • Dokument zur Erfassung & Weiterleitung
+      <!-- Template Footer -->
+      <div style="padding-top: 14px; border-top: 1px solid #e2e8f0; text-align: center; font-size: 11px; color: #64748b; display: flex; justify-content: space-between; align-items: center;">
+        <span>Mängelmelder App • Eigentümergemeinschaft</span>
+        <span>Original-Dokumentationsbeleg</span>
       </div>
 
     </div>
@@ -304,7 +303,7 @@
     <span id="toastMessage">Nachricht</span>
   </div>
 
-  <!-- JAVASCRIPT APPLICATION LOGIC -->
+  <!-- APPLICATION LOGIC -->
   <script>
     // App State Variables
     let currentUUID = '';
@@ -327,9 +326,10 @@
     const btnText = document.getElementById('btnText');
     const shareIcon = document.getElementById('shareIcon');
 
-    // Init application on window load
+    // Init App
     window.onload = function() {
       initApp();
+      registerServiceWorker();
     };
 
     function initApp() {
@@ -340,12 +340,19 @@
       setupActions();
     }
 
+    // Register Service Worker for PWA compliance
+    function registerServiceWorker() {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js')
+          .catch(err => console.log('SW Registration optional:', err));
+      }
+    }
+
     // Generate UUID v4
     function generateNewUUID() {
       if (crypto && typeof crypto.randomUUID === 'function') {
         currentUUID = crypto.randomUUID();
       } else {
-        // Fallback for older browsers
         currentUUID = 'xxxx-4xxx-yxxx'.replace(/[xy]/g, function(c) {
           const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
           return v.toString(16);
@@ -354,14 +361,14 @@
       refIdDisplay.innerText = currentUUID.substring(0, 13) + '...';
     }
 
-    // Set current local system date & time
+    // Set local datetime default
     function setDefaultDateTime() {
       const now = new Date();
       now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
       incidentDateTime.value = now.toISOString().slice(0, 16);
     }
 
-    // Urgency selector toggle buttons logic
+    // Urgency toggle button handling
     function setupUrgencyButtons() {
       const buttons = urgencyContainer.querySelectorAll('.urgency-btn');
       
@@ -388,7 +395,7 @@
       });
     }
 
-    // Handle Photo upload & preview
+    // Photo Handling
     function setupPhotoHandling() {
       uploadTriggerBtn.addEventListener('click', () => photoInput.click());
 
@@ -396,8 +403,8 @@
         const file = e.target.files[0];
         if (!file) return;
 
-        if (file.size > 10 * 1024 * 1024) {
-          showToast('Das Bild darf maximal 10 MB groß sein.');
+        if (file.size > 12 * 1024 * 1024) {
+          showToast('Das Foto darf maximal 12 MB groß sein.');
           return;
         }
 
@@ -421,14 +428,14 @@
       });
     }
 
-    // Set up button actions
+    // Setup action listeners
     function setupActions() {
-      submitShareBtn.addEventListener('click', () => processReport(true));
-      downloadOnlyBtn.addEventListener('click', () => processReport(false));
+      submitShareBtn.addEventListener('click', () => processPNGReport(true));
+      downloadOnlyBtn.addEventListener('click', () => processPNGReport(false));
       resetBtn.addEventListener('click', resetForm);
     }
 
-    // Reset whole form
+    // Form Reset
     function resetForm() {
       document.getElementById('incidentForm').reset();
       generateNewUUID();
@@ -438,14 +445,13 @@
       photoPreviewContainer.classList.add('hidden');
       uploadTriggerBtn.classList.remove('hidden');
       
-      // Reset urgency to normal
       const normalBtn = urgencyContainer.querySelector('[data-urgency="normal"]');
       if (normalBtn) normalBtn.click();
 
       showToast('Formular zurückgesetzt.');
     }
 
-    // Validate form fields
+    // Validate Input
     function validateForm() {
       const reporter = document.getElementById('reporterName').value.trim();
       const dt = incidentDateTime.value;
@@ -468,106 +474,130 @@
       return true;
     }
 
-    // Process Report Generation (PDF + Web Share API or Download)
-    async function processReport(triggerShare = true) {
+    // Main Report Process: PNG Generation via html2canvas
+    async function processPNGReport(triggerShare = true) {
       if (!validateForm()) return;
 
       setLoading(true);
 
       try {
-        // Populate PDF template
-        document.getElementById('pdfRefId').innerText = currentUUID;
-        document.getElementById('pdfReporter').innerText = document.getElementById('reporterName').value.trim();
+        // 1. Fill Template Data
+        document.getElementById('pngRefId').innerText = currentUUID;
+        document.getElementById('pngReporter').innerText = document.getElementById('reporterName').value.trim();
         
-        // Format DateTime string
         const dtValue = new Date(incidentDateTime.value);
         const formattedDt = dtValue.toLocaleDateString('de-DE', {
           day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
         }) + ' Uhr';
-        document.getElementById('pdfDateTime').innerText = formattedDt;
+        document.getElementById('pngDateTime').innerText = formattedDt;
 
-        // Urgency badge in PDF
-        const pdfUrgencyEl = document.getElementById('pdfUrgency');
+        // Urgency badge
+        const pngUrgencyEl = document.getElementById('pngUrgency');
         if (selectedUrgency === 'normal') {
-          pdfUrgencyEl.innerHTML = '<span style="color: #166534; background-color: #dcfce7; padding: 2px 8px; border-radius: 4px;">🟢 Normal</span>';
+          pngUrgencyEl.innerHTML = '<span style="color: #166534; background-color: #dcfce7; padding: 4px 10px; border-radius: 6px;">🟢 Normal</span>';
         } else if (selectedUrgency === 'wichtig') {
-          pdfUrgencyEl.innerHTML = '<span style="color: #854d0e; background-color: #fef9c3; padding: 2px 8px; border-radius: 4px;">🟡 Wichtig</span>';
+          pngUrgencyEl.innerHTML = '<span style="color: #854d0e; background-color: #fef9c3; padding: 4px 10px; border-radius: 6px;">🟡 Wichtig</span>';
         } else {
-          pdfUrgencyEl.innerHTML = '<span style="color: #991b1b; background-color: #fee2e2; padding: 2px 8px; border-radius: 4px;">🔴 Dringend</span>';
+          pngUrgencyEl.innerHTML = '<span style="color: #991b1b; background-color: #fee2e2; padding: 4px 10px; border-radius: 6px;">🔴 Dringend</span>';
         }
 
-        document.getElementById('pdfDescription').innerText = document.getElementById('description').value.trim();
+        document.getElementById('pngDescription').innerText = document.getElementById('description').value.trim();
 
-        // Photo in PDF
-        const pdfPhotoSection = document.getElementById('pdfPhotoSection');
-        const pdfPhoto = document.getElementById('pdfPhoto');
+        // Photo in template
+        const pngPhotoSection = document.getElementById('pngPhotoSection');
+        const pngPhoto = document.getElementById('pngPhoto');
         if (attachedPhotoBase64) {
-          pdfPhoto.src = attachedPhotoBase64;
-          pdfPhotoSection.style.display = 'block';
+          pngPhoto.src = attachedPhotoBase64;
+          pngPhotoSection.style.display = 'block';
         } else {
-          pdfPhotoSection.style.display = 'none';
+          pngPhotoSection.style.display = 'none';
         }
 
-        // Generate PDF using html2pdf.js
-        const element = document.getElementById('pdfTemplate');
-        const fileName = `Maengelmeldung_${currentUUID.substring(0, 8)}.pdf`;
+        // Wait brief moment for image element DOM layout
+        await new Promise(r => setTimeout(r, 100));
 
-        const opt = {
-          margin:       0.4,
-          filename:     fileName,
-          image:        { type: 'jpeg', quality: 0.95 },
-          html2canvas:  { scale: 2, useCORS: true },
-          jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-        };
+        // 2. Render Template via html2canvas
+        const targetElement = document.getElementById('pngTemplate');
+        
+        const canvas = await html2canvas(targetElement, {
+          scale: 2, // High DPI resolution for text clarity
+          useCORS: true,
+          logging: false,
+          backgroundColor: '#ffffff',
+          width: 720,
+          windowWidth: 720
+        });
 
-        const pdfWorker = html2pdf().set(opt).from(element);
-
-        if (triggerShare) {
-          // Output PDF as Blob for Web Share API
-          const pdfBlob = await pdfWorker.output('blob');
-          const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
-
-          // Test if Web Share API with Files is supported (Mobile WhatsApp, Mail, etc.)
-          if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
-            await navigator.share({
-              title: `Mängelmeldung - ${currentUUID.substring(0,8)}`,
-              text: `Mängelmeldung von ${document.getElementById('reporterName').value.trim()} (Ref-ID: ${currentUUID})`,
-              files: [pdfFile]
-            });
-            showToast('PDF erfolgreich freigegeben!');
-          } else {
-            // Fallback: Directly trigger download if Web Share is unavailable
-            await pdfWorker.save();
-            showToast('PDF wurde heruntergeladen. Bitte per WhatsApp/Mail weiterleiten.');
+        // 3. Convert Canvas to Blob and handle Share/Download
+        canvas.toBlob(async (blob) => {
+          if (!blob) {
+            showToast('Fehler bei der Bild-Erstellung.');
+            setLoading(false);
+            return;
           }
-        } else {
-          // Direct download option
-          await pdfWorker.save();
-          showToast('PDF wurde erfolgreich heruntergeladen!');
-        }
+
+          const fileName = `Maengelmeldung_${currentUUID.substring(0, 8)}.png`;
+          const pngFile = new File([blob], fileName, { type: 'image/png' });
+
+          if (triggerShare) {
+            // Web Share API check for files
+            if (navigator.canShare && navigator.canShare({ files: [pngFile] })) {
+              try {
+                await navigator.share({
+                  title: `Mängelmeldung - ${currentUUID.substring(0, 8)}`,
+                  text: `Mängelmeldung von ${document.getElementById('reporterName').value.trim()} (Ref-ID: ${currentUUID})`,
+                  files: [pngFile]
+                });
+                showToast('Mängelmeldung erfolgreich geteilt!');
+              } catch (shareErr) {
+                if (shareErr.name !== 'AbortError') {
+                  downloadFile(blob, fileName);
+                }
+              }
+            } else {
+              // Fallback if sharing is unavailable
+              downloadFile(blob, fileName);
+              showToast('Bild heruntergeladen! Bitte per Messenger weiterleiten.');
+            }
+          } else {
+            // Direct download requested
+            downloadFile(blob, fileName);
+            showToast('Mängelmeldungs-Bild heruntergeladen!');
+          }
+
+          setLoading(false);
+        }, 'image/png', 0.95);
 
       } catch (error) {
-        console.error('PDF Generation Error:', error);
-        // User aborted share sheet or generator error
-        if (error.name !== 'AbortError') {
-          showToast('Fehler bei der PDF-Erstellung.');
-        }
-      } finally {
+        console.error('Canvas Render Error:', error);
+        showToast('Fehler bei der Grafik-Erstellung.');
         setLoading(false);
       }
     }
 
-    // Toggle Loading state on button
+    // Download helper function
+    function downloadFile(blob, fileName) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    // Toggle Button Loading State
     function setLoading(isLoading) {
       if (isLoading) {
         submitShareBtn.disabled = true;
         downloadOnlyBtn.disabled = true;
-        btnText.innerText = 'PDF wird erzeugt...';
+        btnText.innerText = 'Bild wird gerendert...';
         shareIcon.outerHTML = `<svg id="shareIcon" class="animate-spin w-5 h-5 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
       } else {
         submitShareBtn.disabled = false;
         downloadOnlyBtn.disabled = false;
-        btnText.innerText = 'Bericht teilen / als PDF speichern';
+        btnText.innerText = 'Bericht als Bild teilen / speichern';
         const currentSpinner = document.getElementById('shareIcon');
         if (currentSpinner) {
           currentSpinner.outerHTML = `<svg id="shareIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>`;
@@ -575,7 +605,7 @@
       }
     }
 
-    // Custom Toast Notification
+    // Toast Notification
     function showToast(msg) {
       const toast = document.getElementById('toast');
       const toastMessage = document.getElementById('toastMessage');
@@ -590,13 +620,5 @@
       }, 3500);
     }
   </script>
-  <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js')
-        .catch(err => console.error('ServiceWorker Registrierung fehlgeschlagen:', err));
-    });
-  }
-</script>
 </body>
 </html>
